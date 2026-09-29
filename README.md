@@ -23,7 +23,7 @@ flowchart LR
 2. `tools/mirror.py` reads the private bank's `quotes.csv`, `authors.csv` and `tools/bank.py`, and writes the five data files here. It leaves out:
    - the collector's own writing
    - the entries listed in `PRIVATE_IDS`
-   - author rows the published entries do not use
+   - author rows whose entries are all left out
    - the `source_files` column
 3. It stops without writing if a published entry refers to a left-out one, or if a published field contains the collector's name.
 4. Changes are made in the private bank and mirrored.

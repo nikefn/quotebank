@@ -9,7 +9,7 @@ Left out:
     entries whose category is in PRIVATE_CATEGORIES
     entries by an author of any PRIVATE_CATEGORIES entry
     entries whose id is in PRIVATE_IDS
-    author rows the kept entries do not use (a kept alias keeps its bio row)
+    author rows whose entries are all left out (a kept alias keeps its bio row)
     the source_files column
 
 Stops without writing if a kept entry's notes name a left-out id, or if a kept
