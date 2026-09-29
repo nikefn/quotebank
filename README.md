@@ -2,7 +2,7 @@
 
 # quotebank
 
-Quotations, poems, prose passages, proverbs and lyrics by public figures. This repository is a public, filtered mirror of a private quote bank.
+Quotations, poems, prose passages, proverbs and lyrics by public figures, mirrored from a private quote bank.
 
 Read them in [QUOTES.md](QUOTES.md), grouped by category.
 
@@ -19,14 +19,14 @@ flowchart LR
     M --> D["datapackage.json"]
 ```
 
-1. Quotes are collected from personal notes into the private bank, where they are curated and, for part of them, checked against sources.
+1. The private bank collects quotes from personal notes. They are curated there, and some are checked against sources.
 2. `tools/mirror.py` reads the private bank's `quotes.csv`, `authors.csv` and `tools/bank.py`, and writes the five data files here. It leaves out:
    - the collector's own writing
-   - entries that may not be by a public figure
-   - author rows no longer quoted
-   - the `source_files` column, which names private notes
+   - the entries listed in `PRIVATE_IDS`
+   - author rows the published entries do not use
+   - the `source_files` column
 3. It stops without writing if a published entry refers to a left-out one, or if a published field contains the collector's name.
-4. The files here are never edited by hand. Changes are made in the private bank and mirrored.
+4. Changes are made in the private bank and mirrored.
 
 ## Files
 
@@ -42,8 +42,8 @@ flowchart LR
 | `CLAUDE.md` | Markdown | Rules for agents working on this repository. |
 
 Conventions:
-- CSV files: UTF-8 without BOM, comma-separated, minimal quoting, LF line ends, one header row, no comment lines.
-- Metadata for the CSV and JSON files is in `datapackage.json`, not in the files. The column descriptions in it come from the private bank's `tools/bank.py`.
+- CSV files: UTF-8 without BOM, comma-separated, minimal quoting, LF line ends, one header row.
+- Metadata for the CSV and JSON files is in `datapackage.json`. Its column descriptions come from the private bank's `tools/bank.py`.
 - Markdown files start with a comment line: name, type, creation date, purpose. Python files start with a docstring that ends with the file name, type and creation date.
 - Creation dates are the date of the file's first commit in this repository.
 
@@ -51,8 +51,8 @@ Conventions:
 
 | Column | Content |
 | --- | --- |
-| `id` | `Q0001` upward. Permanent, never reused. Missing ids are entries that stay private. |
-| `quote` | The text, in the language it was collected in. Verse lines are separated by ` / `. |
+| `id` | `Q0001` upward. |
+| `quote` | The text. Verse lines are separated by ` / `. |
 | `language` | ISO 639 code (`en`, `de`, `fr`, `la`, `grc`, `pi`, …). |
 | `transliteration` | Romanisation of text not in Latin script. |
 | `entry_type` | `quote`, `prose`, `poem`, `lyric` or `proverb`. |
@@ -60,7 +60,7 @@ Conventions:
 | `source_work` | Most specific source known: work, chapter, letter, episode. |
 | `category` | One theme per entry, e.g. Stoicism, Literature, Cities & Society. |
 | `tags` | Keywords, `;`-separated in CSV, a list in JSON. |
-| `attribution` | How far the sourcing was checked (below). |
+| `attribution` | Sourcing status (below). |
 | `translation_group` | Shared by a translation and its original, e.g. `tg-041`. |
 | `notes` | Findings of the sourcing check and other remarks. |
 
@@ -68,10 +68,10 @@ Conventions:
 | --- | --- |
 | `verified` | Traced to a named source. |
 | `paraphrase` | Renders a real passage, shortened or reworded. |
-| `reattributed` | The author in the original note was wrong and has been corrected. |
+| `reattributed` | Author corrected; the source note named someone else. |
 | `unverified` | Searched for and not found; the search is described in `notes`. |
 | `original` | Original-language text of a translated entry. |
-| `as-given` | Taken as written in the source note; not checked. |
+| `as-given` | Taken as written in the source note; unchecked. |
 
 ## authors.csv
 
