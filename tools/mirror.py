@@ -37,9 +37,9 @@ import sys
 PRIVATE_AUTHORS = {"Niklas Effenberger"}
 PRIVATE_CATEGORIES = {"Own Writing"}
 PRIVATE_IDS = {
-    "Q0250",  # found nowhere else; may be an own thought
+    "Q0250",  # no author found; may not be by a public figure
     "Q0531",  # transcribed speech, speaker unidentified
-    "Q0639",  # Angela Schwindt, a private person
+    "Q0639",  # attributed to a private person
 }
 DROPPED_COLUMN = "source_files"
 

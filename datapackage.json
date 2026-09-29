@@ -197,7 +197,7 @@
           {
             "name": "status",
             "type": "string",
-            "description": "bio (person or group with a biography), alias (another spelling of a bio row), traditional (anonymous or handed-down source).",
+            "description": "bio (person or group with a biography), alias (another spelling of a bio row), traditional (anonymous or handed-down source, or an unnamed character).",
             "constraints": {
               "required": true,
               "enum": [
