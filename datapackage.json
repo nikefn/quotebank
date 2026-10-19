@@ -1,0 +1,255 @@
+{
+  "profile": "data-package",
+  "name": "quotebank",
+  "title": "Quote bank",
+  "description": "Quotations, poems, prose passages, proverbs and lyrics by public figures, mirrored from a private quote bank. This file is the schema: tools/mirror.py publishes only these columns and checks every row against them.",
+  "created": "2026-09-29T09:26:55+00:00",
+  "resources": [
+    {
+      "name": "quotes",
+      "path": "quotes.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "created": "2026-09-29",
+      "description": "One row per entry, sorted by id.",
+      "dialect": {
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\n",
+        "header": true
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "Permanent entry id, Q0001 upward; never renumbered or reused. Gaps are entries that stay private.",
+            "constraints": {
+              "required": true,
+              "unique": true,
+              "pattern": "Q\\d{4}"
+            }
+          },
+          {
+            "name": "quote",
+            "type": "string",
+            "description": "The text, unchanged from the source. Verse lines are separated by ' / '.",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "language",
+            "type": "string",
+            "description": "Language of the text: ISO 639-1 code, or ISO 639-3 where there is none (grc, pi).",
+            "constraints": {
+              "required": true,
+              "enum": [
+                "da",
+                "de",
+                "en",
+                "es",
+                "fa",
+                "fr",
+                "grc",
+                "la",
+                "pi",
+                "pt",
+                "vi",
+                "zh"
+              ]
+            }
+          },
+          {
+            "name": "transliteration",
+            "type": "string",
+            "description": "Romanisation of text not in Latin script; lines separated by ' / '."
+          },
+          {
+            "name": "entry_type",
+            "type": "string",
+            "description": "quote (sentence or short passage), prose (longer passage), poem, lyric (song text), proverb.",
+            "constraints": {
+              "required": true,
+              "enum": [
+                "lyric",
+                "poem",
+                "prose",
+                "proverb",
+                "quote"
+              ]
+            }
+          },
+          {
+            "name": "author",
+            "type": "string",
+            "description": "Person who said or wrote it; for film and television, the character. Empty: anonymous, proverb or unknown. Joins authors.name."
+          },
+          {
+            "name": "source_work",
+            "type": "string",
+            "description": "Most specific source known: work, chapter, letter, episode."
+          },
+          {
+            "name": "category",
+            "type": "string",
+            "description": "One per entry: a theme (Love), a tradition (Stoicism) or a medium (Film & Television).",
+            "constraints": {
+              "required": true
+            }
+          },
+          {
+            "name": "tags",
+            "type": "string",
+            "description": "Keywords, separated by ';' (a list in quotes.json)."
+          },
+          {
+            "name": "attribution",
+            "type": "string",
+            "description": "Sourcing status. verified: traced to a named source. paraphrase: renders a real passage, shortened or reworded. reattributed: author corrected. unverified: searched for and not found; the search is in notes. original: original-language text of a translated entry. as-given: taken as written; unchecked.",
+            "constraints": {
+              "required": true,
+              "enum": [
+                "as-given",
+                "original",
+                "paraphrase",
+                "reattributed",
+                "unverified",
+                "verified"
+              ]
+            }
+          },
+          {
+            "name": "translation_group",
+            "type": "string",
+            "description": "Shared by renderings of the same passage, tg-001 upward. The original-language text, where held, has attribution original.",
+            "constraints": {
+              "pattern": "tg-\\d{3}"
+            }
+          },
+          {
+            "name": "notes",
+            "type": "string",
+            "description": "Findings of the sourcing check, and other remarks."
+          }
+        ],
+        "primaryKey": "id",
+        "foreignKeys": [
+          {
+            "fields": "author",
+            "reference": {
+              "resource": "authors",
+              "fields": "name"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "authors",
+      "path": "authors.csv",
+      "profile": "tabular-data-resource",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "created": "2026-09-29",
+      "description": "One row per author name used in quotes.csv, sorted by name (case-insensitive).",
+      "dialect": {
+        "delimiter": ",",
+        "quoteChar": "\"",
+        "doubleQuote": true,
+        "lineTerminator": "\n",
+        "header": true
+      },
+      "schema": {
+        "fields": [
+          {
+            "name": "name",
+            "type": "string",
+            "description": "Author name exactly as in quotes.author.",
+            "constraints": {
+              "required": true,
+              "unique": true
+            }
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "description": "bio (person or group with a biography), alias (another spelling of a bio row), traditional (anonymous or handed-down source, or an unnamed character).",
+            "constraints": {
+              "required": true,
+              "enum": [
+                "alias",
+                "bio",
+                "traditional"
+              ]
+            }
+          },
+          {
+            "name": "alias_of",
+            "type": "string",
+            "description": "For alias rows: the name of the bio row."
+          },
+          {
+            "name": "born",
+            "type": "string",
+            "description": "Year (1809), 'AD 121', 'c. 563 BC', 'c. 6th c. BC', 'unknown' or 'n/a (fictional)'. For groups, the founding year."
+          },
+          {
+            "name": "died",
+            "type": "string",
+            "description": "Same forms as born. Empty for the living."
+          },
+          {
+            "name": "birthplace",
+            "type": "string",
+            "description": "Place name as it is called today."
+          },
+          {
+            "name": "deathplace",
+            "type": "string",
+            "description": "Place name as it is called today."
+          },
+          {
+            "name": "bio",
+            "type": "string",
+            "description": "One paragraph, not starting with the name."
+          },
+          {
+            "name": "notes",
+            "type": "string",
+            "description": "Remarks, e.g. disputed dates."
+          },
+          {
+            "name": "checked",
+            "type": "string",
+            "description": "Sources the bio was verified against."
+          }
+        ],
+        "primaryKey": "name",
+        "foreignKeys": [
+          {
+            "fields": "alias_of",
+            "reference": {
+              "resource": "",
+              "fields": "name"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "quotes-json",
+      "path": "quotes.json",
+      "format": "json",
+      "mediatype": "application/json",
+      "encoding": "utf-8",
+      "created": "2026-09-29",
+      "description": "quotes.csv as JSON: {\"count\": N, \"entries\": [...]}, one object per row with the same fields; tags is a list."
+    }
+  ],
+  "homepage": "https://github.com/nikefn/quotebank"
+}
